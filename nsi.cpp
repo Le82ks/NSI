@@ -13,16 +13,14 @@ void nsi_room_port () {
 
 std::mutex cout_mutex;
 
-// دالة لفحص نطاق معين من البورتات (تُشغل داخل خيوط منفصلة لزيادة السرعة)
 void scan_port_range(const std::string& target_ip, int start_port, int end_port) {
     for (int port = start_port; port <= end_port; ++port) {
         int sock = socket(AF_INET, SOCK_STREAM, 0);
         if (sock < 0) continue;
 
-        // ضبط وقت انتظار سريع جداً (0.2 ثانية) لتسريع فحص آلاف البورتات
         struct timeval timeout;
         timeout.tv_sec = 0;
-        timeout.tv_usec = 200000; // 200 مللي ثانية
+        timeout.tv_usec = 200000;  
         setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (const char*)&timeout, sizeof(timeout));
         setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO, (const char*)&timeout, sizeof(timeout));
 
@@ -37,7 +35,6 @@ void scan_port_range(const std::string& target_ip, int start_port, int end_port)
             std::lock_guard<std::mutex> lock(cout_mutex);
             std::cout << "[OPEN] Port " << port << "/tcp detected active.\n";
             
-            // فحص استباقي وتحليل مبدئي لبعض البورتات الشائعة أثناء الفحص الشامل
             if (port == 21) std::cout << "       └── [WARN: FTP service detected]\n";
             else if (port == 23) std::cout << "       └── [CRITICAL: Telnet plaintext protocol]\n";
             else if (port == 80 || port == 8080) std::cout << "       └── [INFO: HTTP web service]\n";
@@ -50,9 +47,9 @@ void scan_port_range(const std::string& target_ip, int start_port, int end_port)
 }
 
 void nsi_room_port() {
-    std::string target_ip = "127.0.0.1"; // الآيباد المستهدف
+    std::string target_ip = "127.0.0.1"; 
     int total_ports = 65535;
-    int num_threads = 100; // تقسيم العمل على 100 خيط لتسريع الفحص بشكل كبير جداً
+    int num_threads = 100; 
     int ports_per_thread = total_ports / num_threads;
 
     std::cout << "\n[+] Initializing Full Port Scan (1 - 65535) via NSI Engine...\n";
@@ -67,7 +64,6 @@ void nsi_room_port() {
         threads.emplace_back(scan_port_range, target_ip, start, end);
     }
 
-    // الانتظار حتى تنتهي جميع الخيوط من الفحص
     for (auto& th : threads) {
         th.join();
     }
