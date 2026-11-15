@@ -71,3 +71,6 @@ void nsi_room_port() {
     std::cout << "------------------------------------------------------------\n";
     std::cout << "[+] Full port scan completed successfully without external tools.\n\n";
 }
+
+PRINT ["HI"]
+
