@@ -1,5 +1,5 @@
-#include <iostream>
-#include <string>
-#include <cstdio>
+#pragma once
 
-#include "../des/color.hpp"
+namespace NSI {
+void scan_website();
+}

@@ -1,20 +1,6 @@
-#include <iostream>
-#include <string>
-#include <fstream>
-#include <sstream>
-#include <cctype>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <ifaddrs.h>
-#include <unistd.h>
-#include <net/if.h>
-#include <netdb.h>
-#include <thread>
-#include <chrono>
-#include "nsi_lib.hpp"
-#include "../des/logo.hpp"
-#include "port.cpp"
-#include "../des/color.hpp"
-#include "website.cpp"
-#include "check_website.cpp"
+#pragma once
 
+#include "check_website.hpp"
+#include "logo.hpp"
+#include "port.hpp"
+#include "website.hpp"
